@@ -1,0 +1,109 @@
+body {
+    margin: 0;
+    font-family: Arial;
+}
+.header{
+    background-color:  whitesmoke;
+    display: flex;
+    justify-content:space-between;
+    padding: 15px;  
+    
+}
+.header button{
+    border-radius: 5px;
+    height: 30px;
+    width: 90px;
+}
+.content{
+    background-color: white;
+    border-radius: 45px;
+    padding: 15px;
+    margin: 15px;
+}
+input{
+    border-radius: 5px;
+    padding: 5px;
+    margin: 2px;
+}
+.content button{
+    height: 30px;
+    border-radius: 5px;
+    background-color:blue;
+    color: whitesmoke;
+    text-transform: uppercase;
+    font-weight: bolder;
+    cursor: pointer;
+}
+.filter{
+    background-color: whitesmoke;
+    border-radius: 25px;
+    
+}
+.filter button{
+    padding: 15px;
+    border-radius: 15px;
+    padding: 4px;
+    margin-top: 5px;
+    margin-left: 20px;
+    margin-bottom: 5px;
+    background-color:blue;
+    color: white;
+    font-weight: bolder;
+    cursor: pointer;
+    
+}
+.output{
+    background-color: white;
+}
+.output ul li{
+    list-style: none;
+    background-color: white;
+    padding: 5px;
+    text-transform: capitalize;
+    border-radius: 10px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: ease;
+}
+
+.delete-icon{
+    color: red;
+    padding: 5px;
+    font-size:x-large;
+    cursor: pointer;
+}
+.delete-icon:hover{
+    transform: scale(1.5);
+    
+}
+.app {
+    transition: all 0.3s ease;
+}
+.app.dark-mode {
+    background-color: #121212;
+    color: rgb(31, 28, 28);
+    min-height: 100vh;
+}
+
+.app.light-mode {
+    background-color: #ffffff;
+    color: black;
+    min-height: 100vh;
+}
+.date-icon{
+    margin-left: 0px;
+    margin-right: 0px;
+}
+.edit-icon{
+    color: orange;
+    padding: 5px;
+    font-size:x-large;
+    transition: ease;
+    cursor: pointer;
+    font-weight: bolder;
+}
+.edit-icon:hover{
+    transform: scale(2);
+}
