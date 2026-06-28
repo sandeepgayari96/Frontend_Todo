@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FcTodoList } from "react-icons/fc";
 import { MdOutlineDeleteForever } from "react-icons/md";
 import { CgCalendarDates } from "react-icons/cg";
@@ -6,35 +6,36 @@ import { RiEdit2Line } from "react-icons/ri";
 
 export const TodoApp = () => {
     const [input, setInput] = useState("");
-    const [todolist, setTodoList] = useState([]);
+    const [todolist, setTodoList] = useState(() => {
+        const saved = localStorage.getItem("todos");
+        return saved ? JSON.parse(saved) : [];
+    });
+
     const [mode, setMode] = useState("dark");
     const [dob, setDob] = useState("");
     const [editIndex, setEditIndex] = useState(null);
     const [filter, setFilter] = useState("All");
+
+    useEffect(() => {
+        localStorage.setItem("todos", JSON.stringify(todolist));
+    }, [todolist]);
+
     const handleAddButton = () => {
         if (input.trim() === "") return;
 
         if (editIndex !== null) {
-            const updatedList = todolist.map((todo, idx) =>
-                idx === editIndex
-                    ? {
-                        ...todo,
-                        text: input,
-                        dob: dob,
-                    }
+            const updated = todolist.map((todo, index) =>
+                index === editIndex
+                    ? { ...todo, text: input, dob: dob }
                     : todo
             );
 
-            setTodoList(updatedList);
+            setTodoList(updated);
             setEditIndex(null);
         } else {
             setTodoList([
                 ...todolist,
-                {
-                    text: input,
-                    dob: dob,
-                    completed: false,
-                },
+                { text: input, dob: dob, complete: false },
             ]);
         }
 
@@ -42,38 +43,33 @@ export const TodoApp = () => {
         setDob("");
     };
 
-    
     const handleDeleteIcon = (index) => {
         setTodoList(todolist.filter((_, i) => i !== index));
     };
 
-  
-    const handleModeButton = () => {
-        setMode(mode === "dark" ? "light" : "dark");
-    };
-
-    
     const handleEditButton = (index) => {
         setInput(todolist[index].text);
         setDob(todolist[index].dob);
         setEditIndex(index);
     };
 
-    
-    const handleComplete = (index) => {
-        const updatedList = todolist.map((todo, idx) =>
-            idx === index
-                ? { ...todo, completed: !todo.completed }
+    const handleCheckBoxButton = (index) => {
+        const updated = todolist.map((todo, i) =>
+            i === index
+                ? { ...todo, complete: !todo.complete }
                 : todo
         );
 
-        setTodoList(updatedList);
+        setTodoList(updated);
     };
 
-    const filteredList = todolist.filter((todo) => {
-        if (filter === "All") return true;
-        if (filter === "Active") return !todo.completed;
-        if (filter === "Complete") return todo.completed;
+    const handleModeButton = () => {
+        setMode(mode === "dark" ? "light" : "dark");
+    };
+
+    const filteredTodos = todolist.filter((todo) => {
+        if (filter === "Active") return !todo.complete;
+        if (filter === "complete") return todo.complete;
         return true;
     });
 
@@ -92,7 +88,7 @@ export const TodoApp = () => {
             <div className="content">
                 <input
                     type="text"
-                    placeholder="Enter Task..."
+                    placeholder="Enter task..."
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                 />
@@ -111,25 +107,24 @@ export const TodoApp = () => {
             <div className="filter">
                 <button onClick={() => setFilter("All")}>All</button>
                 <button onClick={() => setFilter("Active")}>Active</button>
-                <button onClick={() => setFilter("Complete")}>Complete</button>
+                <button onClick={() => setFilter("complete")}>Complete</button>
             </div>
 
             <div className="output">
                 <ul>
-                    {filteredList.map((todo, index) => (
+                    {filteredTodos.map((todo, index) => (
                         <li key={index}>
                             <input
                                 type="checkbox"
-                                checked={todo.completed}
-                                onChange={() => handleComplete(index)}
+                                checked={todo.complete}
+                                onChange={() => handleCheckBoxButton(index)}
                             />
 
                             <span
                                 style={{
-                                    textDecoration: todo.completed
+                                    textDecoration: todo.complete
                                         ? "line-through"
                                         : "none",
-                                    marginRight: "10px",
                                 }}
                             >
                                 {todo.text}
@@ -142,19 +137,11 @@ export const TodoApp = () => {
                             <RiEdit2Line
                                 className="edit-icon"
                                 onClick={() => handleEditButton(index)}
-                                style={{
-                                    cursor: "pointer",
-                                    marginLeft: "10px",
-                                }}
                             />
 
                             <MdOutlineDeleteForever
                                 className="delete-icon"
                                 onClick={() => handleDeleteIcon(index)}
-                                style={{
-                                    cursor: "pointer",
-                                    marginLeft: "10px",
-                                }}
                             />
                         </li>
                     ))}
